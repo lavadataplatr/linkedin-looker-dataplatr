@@ -23,6 +23,7 @@ view: linkedin_pages__posts {
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}.first_published_timestamp ;;
   }
+
   dimension: impression_count {
     type: number
     sql: ${TABLE}.impression_count ;;
