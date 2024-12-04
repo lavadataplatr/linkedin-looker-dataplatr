@@ -109,6 +109,64 @@ view: cust_linkedin_pages__posts {
     value_format_name: percent_2 # Formats as a percentage with two decimal places
   }
 
+  parameter: measure_select_dynamic_metric {
+    default_value: "Impressions"
+    allowed_value: {label: "Impressions" value: "Impressions"}
+    allowed_value: {label: "Members Reached" value:"Members Reached"}
+    allowed_value: {label: "Clicks" value:"Clicks"}
+    allowed_value: {label: "Reactions" value:"Reactions"}
+    allowed_value: {label: "Comments" value:"Comments"}
+    allowed_value: {label: "Reposts" value:"Reposts"}
+    allowed_value: {label: "Engagement Rate" value:"Engagement Rate"}
+    group_label: "Filter Fields"
+    label: "Metrics"
+    hidden: no
+  }
+
+  measure: dynamic_overview_metric {
+    type: number
+
+    sql: case
+          when {% parameter measure_select_dynamic_metric %} = 'Impressions' then ${total_impression_count}
+          when {% parameter measure_select_dynamic_metric %} = 'Clicks' then ${total_click_count}
+          when {% parameter measure_select_dynamic_metric %} = 'Reactions' then ${total_like_count}
+          when {% parameter measure_select_dynamic_metric %} = 'Comments' then ${total_comment_count}
+          when {% parameter measure_select_dynamic_metric %} = 'Reposts' then ${total_share_count}
+          when {% parameter measure_select_dynamic_metric %} = 'Engagement Rate' then ${engagement_rate}
+    end;;
+    label: "Dynamic Overview Metric"
+    view_label: "Calculated Metrics"
+    description: "Dynamic Overview Metric measure created for Impressions,Clicks,Reactions,Comments,Reposts,Engagement Rate"
+    value_format_name: decimal_0
+    hidden: no
+  }
+
+  #measure: previous_day_metric {
+    #type: number
+    #sql: OFFSET(${dynamic_overview_metric}, 1);;
+    #label: "Previous Day Metric"
+    #view_label: "Calculated Metrics"
+    #description: "Dynamic previous day value based on the selected metric"
+    #value_format_name: decimal_0
+    #hidden: no
+  #}
+
+  #measure: percent_change_metric {
+   # type: number
+    #sql: CASE
+        # WHEN ${previous_day_metric} != 0 THEN
+          # (${dynamic_overview_metric} - ${previous_day_metric}) / ${previous_day_metric}
+         #ELSE NULL
+       #END;;
+    #label: "Percent Change Metric"
+    #view_label: "Calculated Metrics"
+    #description: "Dynamic percent change based on the selected metric"
+    #value_format_name: percent_2  # Formats as a percentage with 2 decimal places
+    #hidden: no
+  #}
+
+
+
 
 
   measure: count {
