@@ -49,11 +49,7 @@ view: cust_linkedin_pages__posts {
 
 
 
-  filter: date_range {
-    type: date
-    sql: ${TABLE}.Created_Date ;;
-    suggestions: ["Last 7 days", "Last 15 days", "Last 30 days", "Last 90 days", "Last 12 months", "Custom"]
-  }
+
 
 
 #****************************** Measures *******************#
@@ -78,6 +74,63 @@ view: cust_linkedin_pages__posts {
     label: "Total Impressions Count"
     sql: ${impression_count} ;;
   }
+
+  dimension: previous_day_1 {
+    type: number
+    sql: CASE
+          WHEN DATE(${created_date}) = CURRENT_DATE() THEN 1  -- For today's records
+          WHEN DATE(${created_date}) = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) THEN 2  -- For yesterday's records
+          ELSE 0  -- For other records
+       END ;;
+    description: "Flag for records from today (1), yesterday (2), or other (0)."
+  }
+
+  dimension: max_date {
+    type: date
+    sql: (SELECT MAX(${created_date})) ;;
+    description: "The most recent date in the dataset."
+  }
+
+  dimension: previous_day_new {
+    type: number
+    sql: CASE
+          WHEN DATE(${created_date}) = DATE_SUB((SELECT MAX(${created_date})), INTERVAL 1 DAY) THEN 1
+          ELSE 0
+       END ;;
+    description: "Flag for records from the previous day, based on the most recent date in the dataset."
+  }
+
+  dimension: previous_day_new_1 {
+    type: date
+    sql:
+    CASE
+      WHEN DATE(TIMESTAMP(${created_date})) = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) THEN DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      ELSE NULL
+    END ;;
+    description: "Displays the previous day's date if the created_date is the previous day, otherwise NULL."
+  }
+
+
+
+
+  dimension: previous_day {
+    type: number
+    sql: CASE
+        WHEN DATE(${created_date}) = (SELECT MAX(DATE(${created_date})) FROM `dataplatr-sandbox.linkedin_company_pages_linkedin_pages.Cust_linkedin_pages__posts` ) THEN 1  -- For the latest records
+        WHEN DATE(${created_date}) = DATE_SUB((SELECT MAX(DATE(${created_date})) FROM `dataplatr-sandbox.linkedin_company_pages_linkedin_pages.Cust_linkedin_pages__posts` ), INTERVAL 1 DAY) THEN 2  -- For the previous day's records
+        ELSE 0  -- For other records
+     END ;;
+    description: "Flag for records from the latest date (1), previous day (2), or other (0)."
+  }
+
+  measure: previous_day_impression_count {
+    type: sum
+    sql: ${impression_count} ;;
+    filters: [previous_day: "2"]
+    label: "Previous Day"
+    description: "Impression count for the previous day."
+  }
+
 
   measure: total_like_count {
     type: sum
