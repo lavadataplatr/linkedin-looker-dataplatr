@@ -147,7 +147,7 @@ view: time_bound_share_statistic {
     end;;
     label: "Dynamic Overview Metric"
     view_label: "Calculated Metrics"
-    description: "Dynamic Overview Metric measure created for Impressions,Clicks,Reactions,Comments,Reposts,Engagement Rate"
+    description: "Dynamic Overview Metric measure created for Impressions,Members Reached,Clicks,Reactions,Comments,Reposts,Engagement Rate"
     value_format_name: decimal_0
     hidden: no
   }
@@ -230,37 +230,46 @@ view: time_bound_share_statistic {
     sql: ROUND(ABS(${dynamic_previous_day_percent}), 2) ;;  # Added closing parenthesis and rounded to 2 decimal places
   }
 
+ measure: previous_percent_change_growth {
+
+  description: "Percent Change for Previous Day"
+  type: number
+  sql: ROUND(ABS(${dynamic_previous_day_percent}), 2);;
+
+  html:
+    <tr>
+      <td style="padding: 5px;">
+        <p style="font-size: 13px; font-family: 'Calibri', sans-serif; color: black; margin: 0;">
+          <b>Previous Day Change:&nbsp;&nbsp;</b>
+
+    {% if time_bound_share_statistic.dynamic_previous_day_percent._value >= 0 %}
+    <span style="color: green; font-size: 20px;">
+    <b>{{ time_bound_share_statistic.dynamic_previous_day_percent_abs._rendered_value }}% &#9650;</b>
+    </span>
+    {% else %}
+    <span style="color: red; font-size: 20px;">
+    <b>{{ time_bound_share_statistic.dynamic_previous_day_percent_abs._rendered_value }}% &#9660;</b>
+    </span>
+    {% endif %}
+
+    <span style="color: black;"> Previous Day</span>
+    </p>
+    </td>
+    </tr>
+    ;;
+}
 
 
 
 
-    measure: previous_percent_change_growth {
-      description: "Percent Change for Previous Day"
-      type: number
-      sql: ROUND(ABS(${dynamic_previous_day_percent}), 2) ;;
 
-      html:
-          <tr>
-            <td style="padding: 5px;">
-              <p style="font-size: 13px; font-family: 'Calibri', sans-serif; color: black; margin: 0;">
-                <b>Previous Day Change:&nbsp;&nbsp;</b>
 
-                {% if time_bound_share_statistic.dynamic_previous_day_percent._value >= 0 %}
-                  <span style="color: green; font-size: 20px;">
-                    <b>{{ time_bound_share_statistic.dynamic_previous_day_percent_abs._rendered_value }}% &#9650;</b>
-                  </span>
-                {% else %}
-                  <span style="color: red; font-size: 20px;">
-                    <b>{{ time_bound_share_statistic.dynamic_previous_day_percent_abs._rendered_value }}% &#9660;</b>
-                  </span>
-                {% endif %}
 
-                <span style="color: black;"> Previous Day</span>
-              </p>
-            </td>
-          </tr>
-        ;;
-    }
+
+
+
+
+
 
 
 measure: count {
