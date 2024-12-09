@@ -87,6 +87,7 @@ view: abm_data {
     convert_tz: no
     datatype: date
     sql: ${TABLE}.Reached_Out_Date ;;
+    label: "Connections Sent"
   }
   dimension: remark {
     type: string
@@ -113,7 +114,63 @@ view: abm_data {
     convert_tz: no
     datatype: date
     sql: ${TABLE}.Thank_You_Message_Date ;;
+    label: "Thank You Message Sent"
   }
+
+
+#**************************Measures**************************#
+
+  measure: connections_sent {
+    type: count_distinct
+    sql: ${reached_out_date} ;;
+    label: "Connections Sent"
+  }
+
+  measure: thank_you_message_sent {
+    type: count_distinct
+    sql: ${thank_you_message_date} ;;
+    label: "Thank You Message Sent"
+  }
+
+  measure: follow_up_message_sent {
+    type: number
+    sql:
+      ${follow_up_1_date} +
+      ${follow_up_2_date} +
+      ${follow_up_3_date} +
+      ${follow_up_4_date} ;;
+    label: "Follow-Up Message Sent"
+  }
+
+  measure: acceptance_rate {
+    type: number
+    sql: (SUM(CASE WHEN ${accepted} = 'yes' THEN 1 ELSE 0 END${reached_out_date})) * 100 ;;
+    value_format: "0.00%"  # Format as percentage
+    label: "Acceptance Rate"
+  }
+
+  measure: response_rate {
+    type: number
+    sql: (SUM(CASE WHEN ${response} IS NOT NULL THEN 1 ELSE 0 END) / COUNT(${thank_you_message_date})) * 100 ;;
+    value_format: "0.00%"  # Format as percentage
+    label: "Response Rate"
+  }
+
+  filter: custom_date_range {
+    type: string
+    sql: ${reached_out_date} BETWEEN '2024-11-25' AND '2024-12-01' ;;  # Custom date range filter
+  }
+
+  filter: weekly_date_range {
+    type: string
+    sql: ${reached_out_date} BETWEEN CURRENT_DATE() - INTERVAL 7 DAY AND CURRENT_DATE() ;;  # Weekly filter
+  }
+
+  filter: current_month {
+    type: string
+    sql: EXTRACT(MONTH FROM ${reached_out_date}) = EXTRACT(MONTH FROM CURRENT_DATE()) ;;  # Current month filter
+  }
+
   measure: count {
     type: count
     drill_fields: [name, company_name]
