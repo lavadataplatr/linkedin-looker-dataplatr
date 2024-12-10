@@ -114,7 +114,7 @@ view: abm_data {
     convert_tz: no
     datatype: date
     sql: ${TABLE}.Thank_You_Message_Date ;;
-    label: "Thank You Message Sent"
+    label: "Thank You Message Date"
   }
 
 
