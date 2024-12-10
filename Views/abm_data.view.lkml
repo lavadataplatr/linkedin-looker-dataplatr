@@ -131,6 +131,13 @@ view: abm_data {
     label: "Connections Sent"
   }
 
+  measure: connections_sent_as_char {
+    type: number
+    sql: COUNT(CAST(${reached_out_date} AS STRING)) ;;
+    label: "Connections Sent (as Char)"
+  }
+
+
 
   measure: connections_sent_custom_date {
     type: number
