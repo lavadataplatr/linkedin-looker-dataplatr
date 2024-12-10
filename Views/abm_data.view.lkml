@@ -126,6 +126,7 @@ view: abm_data {
     label: "Connections Sent"
   }
 
+
   measure: thank_you_message_sent {
     type: count_distinct
     sql: ${thank_you_message_date} ;;
@@ -142,12 +143,15 @@ view: abm_data {
     label: "Follow-Up Message Sent"
   }
 
+# Measure for Acceptance Rate
   measure: acceptance_rate {
     type: number
-    sql: (SUM(CASE WHEN ${accepted} = 'yes' THEN 1 ELSE 0 END${reached_out_date})) * 100 ;;
+    sql: (SUM(CASE WHEN ${accepted} = 'yes' THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(${reached_out_date}), 0) ;;
     value_format: "0.00%"  # Format as percentage
     label: "Acceptance Rate"
   }
+
+
 
   measure: response_rate {
     type: number
@@ -170,6 +174,59 @@ view: abm_data {
     type: string
     sql: EXTRACT(MONTH FROM ${reached_out_date}) = EXTRACT(MONTH FROM CURRENT_DATE()) ;;  # Current month filter
   }
+
+  measure: overall_response_rate {
+    type: number
+    sql: SUM(CASE WHEN response_date IS NOT NULL THEN 1 ELSE 0 END) / COUNT(thank_you_message_date) ;;
+    value_format: "0.00%"  # Formats the value as a percentage with 2 decimal places
+    label: "Overall Response Rate"
+  }
+
+
+  measure: thank_you_message_rr {
+    type: number
+    sql: (SUM(CASE WHEN ${response_date} < IFNULL(${follow_up_1_date}, '2099-01-01') THEN 1 ELSE 0 END) /
+      SUM(CASE WHEN ${thank_you_message_date} IS NOT NULL THEN 1 ELSE 0 END)) ;;  # Removed * 100
+    value_format: "0.00%"  # Formats the result as a percentage
+    label: "Thank You Message RR"
+  }
+
+  measure: follow_up_1_rr {
+    type: number
+    sql: (SUM(CASE WHEN ${response_date} >= ${follow_up_1_date} AND
+                   ${response_date} < IFNULL(${follow_up_2_date}, '2099-01-01') THEN 1 ELSE 0 END) /
+        SUM(CASE WHEN ${thank_you_message_date} IS NOT NULL THEN 1 ELSE 0 END)) ;;  # Removed * 100
+    value_format: "0.00%"  # Formats the result as a percentage
+    label: "Follow Up 1 RR"
+  }
+
+  measure: follow_up_2_rr {
+    type: number
+    sql: (SUM(CASE WHEN ${response_date} >= ${follow_up_2_date} AND
+                   ${response_date} < IFNULL(${follow_up_3_date}, '2099-01-01') THEN 1 ELSE 0 END) /
+        SUM(CASE WHEN ${thank_you_message_date} IS NOT NULL THEN 1 ELSE 0 END)) ;;  # Removed * 100
+    value_format: "0.00%"  # Formats the result as a percentage
+    label: "Follow Up 2 RR"
+  }
+
+  measure: follow_up_3_rr {
+    type: number
+    sql: (SUM(CASE WHEN ${response_date} >= ${follow_up_3_date} AND
+                   ${response_date} < IFNULL(${follow_up_4_date}, '2099-01-01') THEN 1 ELSE 0 END) /
+        SUM(CASE WHEN ${thank_you_message_date} IS NOT NULL THEN 1 ELSE 0 END)) ;;  # Removed * 100
+    value_format: "0.00%"  # Formats the result as a percentage
+    label: "Follow Up 3 RR"
+  }
+
+  measure: follow_up_4_rr {
+    type: number
+    sql: (SUM(CASE WHEN ${response_date} >= ${follow_up_4_date} THEN 1 ELSE 0 END) /
+      SUM(CASE WHEN ${thank_you_message_date} IS NOT NULL THEN 1 ELSE 0 END)) ;;  # Removed * 100
+    value_format: "0.00%"  # Formats the result as a percentage
+    label: "Follow Up 4 RR"
+  }
+
+
 
   measure: count {
     type: count
