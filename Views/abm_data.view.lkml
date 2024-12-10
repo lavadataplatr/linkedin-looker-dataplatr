@@ -87,7 +87,7 @@ view: abm_data {
     convert_tz: no
     datatype: date
     sql: ${TABLE}.Reached_Out_Date ;;
-    label: "Connections Sent"
+    label: "Reached Out Date"
   }
   dimension: remark {
     type: string
@@ -120,10 +120,23 @@ view: abm_data {
 
 #**************************Measures**************************#
 
+  #measure: connections_sent {
+    #type: count
+    #sql: ${reached_out_date} ;;
+    #label: "Connections Sent"
+  #}
+
   measure: connections_sent {
-    type: count_distinct
-    sql: ${reached_out_date} ;;
+    type: count  # No need for sql parameter
     label: "Connections Sent"
+  }
+
+
+  measure: connections_sent_custom_date {
+    type: number
+    sql:
+    COUNT(CASE WHEN ${reached_out_date} BETWEEN '2024-11-25' AND '2024-12-01' THEN ${reached_out_date} ELSE NULL END) ;;
+    label: "Custom Date Connections Sent"
   }
 
 
@@ -133,32 +146,36 @@ view: abm_data {
     label: "Thank You Message Sent"
   }
 
-  measure: follow_up_message_sent {
+ measure: follow_up_message_sent {
     type: number
     sql:
-      ${follow_up_1_date} +
-      ${follow_up_2_date} +
-      ${follow_up_3_date} +
-      ${follow_up_4_date} ;;
+    (COUNT(${follow_up_1_date}) +
+    COUNT(${follow_up_2_date}) +
+    COUNT(${follow_up_3_date}) +
+    COUNT(${follow_up_4_date})) ;;
     label: "Follow-Up Message Sent"
   }
+
 
 # Measure for Acceptance Rate
   measure: acceptance_rate {
     type: number
-    sql: (SUM(CASE WHEN ${accepted} = 'yes' THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(${reached_out_date}), 0) ;;
+    sql:
+    (SUM(CASE WHEN ${accepted} = 'yes' THEN 1 ELSE 0 END) * 1.0) /
+    NULLIF(COUNT(${reached_out_date}), 0) ;;
     value_format: "0.00%"  # Format as percentage
     label: "Acceptance Rate"
   }
 
-
-
   measure: response_rate {
     type: number
-    sql: (SUM(CASE WHEN ${response} IS NOT NULL THEN 1 ELSE 0 END) / COUNT(${thank_you_message_date})) * 100 ;;
+    sql:
+    (SUM(CASE WHEN ${response} IS NOT NULL THEN 1 ELSE 0 END) * 1.0) /
+    NULLIF(COUNT(${thank_you_message_date}), 0) ;;
     value_format: "0.00%"  # Format as percentage
     label: "Response Rate"
   }
+
 
   filter: custom_date_range {
     type: string
