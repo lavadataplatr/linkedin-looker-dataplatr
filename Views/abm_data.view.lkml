@@ -146,6 +146,41 @@ view: abm_data {
     label: "Custom Date Connections Sent"
   }
 
+  measure: connections_sent_weekly {
+    type: number
+    sql:
+    COUNT(CASE WHEN ${reached_out_date} BETWEEN CURRENT_DATE() - INTERVAL 7 DAY AND CURRENT_DATE() THEN ${reached_out_date} ELSE NULL END) ;;
+    label: "Weekly Connections Sent"
+  }
+
+  measure: connections_sent_current_month {
+    type: number
+    sql:
+    COUNT(CASE WHEN EXTRACT(MONTH FROM ${reached_out_date}) = EXTRACT(MONTH FROM CURRENT_DATE()) THEN ${reached_out_date} ELSE NULL END) ;;
+    label: "Current Month Connections Sent"
+  }
+
+  measure: connections_sent_previous_month {
+    type: number
+    sql:
+    COUNT(CASE WHEN EXTRACT(MONTH FROM ${reached_out_date}) = EXTRACT(MONTH FROM CURRENT_DATE()) - 1 THEN ${reached_out_date} ELSE NULL END) ;;
+    label: "Previous Month Connections Sent"
+  }
+
+  measure: connections_sent_last_6_months {
+    type: number
+    sql:
+    COUNT(CASE WHEN ${reached_out_date} BETWEEN DATE_ADD(CURRENT_DATE(), INTERVAL -6 MONTH) AND CURRENT_DATE() THEN ${reached_out_date} ELSE NULL END) ;;
+    label: "Connections Sent in Last 6 Months"
+  }
+
+  measure: connections_sent_last_6_months_1 {
+    type: number
+    sql:
+    COUNT(CASE WHEN ${reached_out_date} >= DATE_TRUNC(CURRENT_DATE(), MONTH) - INTERVAL 6 MONTH AND ${reached_out_date} < CURRENT_DATE() THEN ${reached_out_date} ELSE NULL END) ;;
+    label: "Connections Sent in Last 6 Months 1"
+  }
+
 
   measure: thank_you_message_sent {
     type: count_distinct
@@ -249,6 +284,13 @@ view: abm_data {
     value_format: "0.00%"  # Formats the result as a percentage
     label: "Follow Up 4 RR"
   }
+
+  measure: total_company {
+    type: count_distinct
+    sql: ${company_name} ;;
+    label: "Total Company"
+  }
+
 
 
 
