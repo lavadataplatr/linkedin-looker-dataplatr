@@ -97,6 +97,7 @@ view: abm_data {
     type: string
     sql: ${TABLE}.Response ;;
   }
+
   dimension_group: response {
     type: time
     timeframes: [raw, date, week, month, quarter, year]
@@ -104,10 +105,12 @@ view: abm_data {
     datatype: date
     sql: ${TABLE}.Response_Date ;;
   }
+
   dimension: row_id {
     type: number
     sql: ${TABLE}.Row_Id ;;
   }
+
   dimension_group: thank_you_message {
     type: time
     timeframes: [raw, date, week, month, quarter, year]
@@ -116,6 +119,13 @@ view: abm_data {
     sql: ${TABLE}.Thank_You_Message_Date ;;
     label: "Thank You Message Date"
   }
+
+  dimension: week_number {
+    type: string
+    sql: CONCAT(EXTRACT(YEAR FROM DATE(${reached_out_date})), '-W', LPAD(CAST(EXTRACT(WEEK FROM DATE(${reached_out_date})) AS STRING), 2, '0')) ;;
+  }
+
+
 
 
 #**************************Measures**************************#
@@ -134,10 +144,19 @@ view: abm_data {
   measure: connections_sent_as_char {
     type: number
     sql: COUNT(CAST(${reached_out_date} AS STRING)) ;;
-    label: "Connections Sent (as Char)"
+    label: "Total Connections"
   }
 
+  measure: total_response {
+    type: count
+    label: "Total Response"
+  }
 
+  measure: total_accepted {
+    type: number
+    sql: COUNT(CAST(${accepted_date_date} AS STRING)) ;;
+    label: "Total Accepted"
+  }
 
   measure: connections_sent_custom_date {
     type: number
@@ -209,16 +228,6 @@ view: abm_data {
     label: "Acceptance Rate"
   }
 
-  measure: response_rate {
-    type: number
-    sql:
-    (SUM(CASE WHEN ${response} IS NOT NULL THEN 1 ELSE 0 END) * 1.0) /
-    NULLIF(COUNT(${thank_you_message_date}), 0) ;;
-    value_format: "0.00%"  # Format as percentage
-    label: "Response Rate"
-  }
-
-
   filter: custom_date_range {
     type: string
     sql: ${reached_out_date} BETWEEN '2024-11-25' AND '2024-12-01' ;;  # Custom date range filter
@@ -236,10 +245,29 @@ view: abm_data {
 
   measure: overall_response_rate {
     type: number
-    sql: SUM(CASE WHEN response_date IS NOT NULL THEN 1 ELSE 0 END) / COUNT(thank_you_message_date) ;;
+    sql: (SUM(CASE WHEN response_date IS NOT NULL THEN 1 ELSE 0 END)/COUNT(thank_you_message_date) ;;
     value_format: "0.00%"  # Formats the value as a percentage with 2 decimal places
-    label: "Overall Response Rate"
+    label: "OverallResponseRate"
   }
+
+  measure: overall_response_rate_1 {
+    type: number
+    sql:
+    (SUM(CASE WHEN ${response_date} IS NOT NULL THEN 1 ELSE 0 END) * 1.0) /
+    NULLIF(COUNT(${thank_you_message_date}), 0) ;;
+    value_format: "0.00%"  # Formats the value as a percentage with 2 decimal places
+    label: "Response Rate"
+  }
+
+  #measure: response_rate {
+    #type: number
+    #sql:
+    #(SUM(CASE WHEN ${response} IS NOT NULL THEN 1 ELSE 0 END) * 1.0) /
+    #NULLIF(COUNT(${thank_you_message_date}), 0) ;;
+    #value_format: "0.00%"  # Format as percentage
+    #label: "Response Rate"
+  #}
+
 
 
   measure: thank_you_message_rr {
