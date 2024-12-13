@@ -319,12 +319,15 @@ view: abm_data {
     label: "Total Company"
   }
 
+
+
   parameter: measure_select_dynamic_metric {
+
     default_value: "Company"
-    allowed_value: {label: "Company" value: "Top 10 Company by Connections"}
-    allowed_value: {label: "Designation" value:"Top 10 Company by Designation"}
-    allowed_value: {label: "Company Size" value:"Top 10 Company by Company Size"}
-    allowed_value: {label: "Industry" value:"Top 10 Company by Industry"}
+    allowed_value: {label: "Top 10 Company by Connections" value: "Top 10 Company by Connections"}
+    allowed_value: {label: "Top 10 Company by Designation" value: "Top 10 Company by Designation"}
+    allowed_value: {label: "Top 10 Company by Company Size" value: "Top 10 Company by Company Size"}
+    allowed_value: {label: "Top 10 Company by Industry" value: "Top 10 Company by Industry"}
     group_label: "Filter Fields"
     label: "Metrics"
     hidden: no
@@ -332,17 +335,30 @@ view: abm_data {
 
   measure: dynamic_overview_metric {
     type: number
-
-    sql: case
-          when {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Connections' then ${connections_sent}
-          when {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Designation' then ${connections_sent}
-          when {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Company Size' then ${connections_sent}
-          when {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Industry' then ${connections_sent}
-    end;;
+    sql: CASE
+          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Connections' THEN ${connections_sent}
+          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Designation' THEN ${connections_sent}
+          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Company Size' THEN ${connections_sent}
+          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Industry' THEN ${connections_sent}
+        END ;;
     label: "Dynamic Top 10 Metric"
     view_label: "Calculated Metrics"
-    description: "Dynamic Top 10 Metric measure created for Top 10 Company by Connections,Top 10 Company by Designation,Top 10 Company by Company Size,Top 10 Company by Industry"
+    description: "Dynamic Top 10 Metric measure created for various Top 10 Company metrics."
     value_format_name: decimal_0
+    hidden: no
+  }
+
+  dimension: dynamic_dimension {
+    type: string
+    sql: CASE
+          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Connections' THEN ${company_name}
+          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Designation' THEN ${designation}
+          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Company Size' THEN ${company_size}
+          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Industry' THEN ${industry}
+        END ;;
+    label: "Dynamic Dimension"
+    view_label: "Dynamic Fields"
+    description: "Dimension changes dynamically based on parameter selection."
     hidden: no
   }
 
