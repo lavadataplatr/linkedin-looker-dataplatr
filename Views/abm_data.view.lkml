@@ -319,6 +319,33 @@ view: abm_data {
     label: "Total Company"
   }
 
+  parameter: measure_select_dynamic_metric {
+    default_value: "Company"
+    allowed_value: {label: "Company" value: "Top 10 Company by Connections"}
+    allowed_value: {label: "Designation" value:"Top 10 Company by Designation"}
+    allowed_value: {label: "Company Size" value:"Top 10 Company by Company Size"}
+    allowed_value: {label: "Industry" value:"Top 10 Company by Industry"}
+    group_label: "Filter Fields"
+    label: "Metrics"
+    hidden: no
+  }
+
+  measure: dynamic_overview_metric {
+    type: number
+
+    sql: case
+          when {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Connections' then ${connections_sent}
+          when {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Designation' then ${connections_sent}
+          when {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Company Size' then ${connections_sent}
+          when {% parameter measure_select_dynamic_metric %} = 'Top 10 Company by Industry' then ${connections_sent}
+    end;;
+    label: "Dynamic Top 10 Metric"
+    view_label: "Calculated Metrics"
+    description: "Dynamic Top 10 Metric measure created for Top 10 Company by Connections,Top 10 Company by Designation,Top 10 Company by Company Size,Top 10 Company by Industry"
+    value_format_name: decimal_0
+    hidden: no
+  }
+
 
 
 
