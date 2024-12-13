@@ -107,6 +107,7 @@ view: abm_data {
   }
 
   dimension: row_id {
+    primary_key: yes
     type: number
     sql: ${TABLE}.Row_Id ;;
   }
@@ -130,44 +131,31 @@ view: abm_data {
 
 #**************************Measures**************************#
 
-  #measure: connections_sent {
-    #type: count
-    #sql: ${reached_out_date} ;;
-    #label: "Connections Sent"
-  #}
+
 
   measure: connections_sent {
-    type: count  # No need for sql parameter
+    type: sum
+    sql: CASE WHEN ${reached_out_date} IS NOT NULL THEN 1 ELSE 0 END;;
     label: "Connections Sent"
   }
 
-  measure: connections_sent_as_char {
-    type: number
-    sql: COUNT(CAST(${reached_out_date} AS STRING)) ;;
-    label: "Total Connections"
-  }
-
-  measure: total_response {
-    type: count
-    label: "Total Response"
-  }
-
-  measure: total_accepted {
-    type: number
-    sql: COUNT(CAST(${accepted_date_date} AS STRING)) ;;
-    label: "Total Accepted"
-  }
-
-  # measure: total_accepted_count {
-  #   type: count
-  #   sql: ${accepted_date_date} ;;
-  #   label: "Accepted"
-  # }
-
-  measure: accepted_total {
+ measure: accepted_total {
     type: sum
-    sql: CASE WHEN ${accepted_date_date} IS NOT NULL THEN 1 ELSE 0 END;
+    sql: CASE WHEN ${accepted_date_date} IS NOT NULL THEN 1 ELSE 0 END;;
     label: "Accepted"
+    hidden: no
+  }
+
+  measure: thank_you_message_sent {
+    type: sum
+    sql: CASE WHEN ${thank_you_message_date} IS NOT NULL THEN 1 ELSE 0 END;;
+    label: "Thank You Message Sent"
+  }
+
+  measure: response_received {
+    type: sum
+    sql: CASE WHEN ${response_date} IS NOT NULL THEN 1 ELSE 0 END;;
+    label: "Response Received"
   }
 
   measure: connections_sent_custom_date {
@@ -212,14 +200,37 @@ view: abm_data {
     label: "Connections Sent in Last 6 Months 1"
   }
 
-
-  measure: thank_you_message_sent {
-    type: count_distinct
-    sql: ${thank_you_message_date} ;;
-    label: "Thank You Message Sent"
+  measure: response_after_thank_you_message {
+    type: sum
+    sql: CASE WHEN ${response_date} < IFNULL(${follow_up_1_date}, '2099-01-01') THEN 1 ELSE 0 END;;
+    label: "Response After Thank You Message"
   }
 
- measure: follow_up_message_sent {
+  measure: response_after_follow_up_1 {
+    type: sum
+    sql: CASE WHEN ${response_date} >= ${follow_up_1_date} AND ${response_date} < IFNULL(${follow_up_2_date}, '2099-01-01') THEN 1 ELSE 0 END;;
+    label: "Response After Follow-Up 1"
+  }
+
+  measure: response_after_follow_up_2 {
+    type: sum
+    sql: CASE WHEN ${response_date} >= ${follow_up_2_date} AND ${response_date} < IFNULL(${follow_up_3_date}, '2099-01-01') THEN 1 ELSE 0 END;;
+    label: "Response After Follow-Up 2"
+  }
+
+  measure: response_after_follow_up_3 {
+    type: sum
+    sql: CASE WHEN ${response_date} >= ${follow_up_3_date} AND ${response_date} < IFNULL(${follow_up_4_date}, '2099-01-01') THEN 1 ELSE 0 END;;
+    label: "Response After Follow-Up 3"
+  }
+
+  measure: response_after_follow_up_4 {
+    type: sum
+    sql: CASE WHEN ${response_date} >= ${follow_up_4_date} THEN 1 ELSE 0 END;;
+    label: "Response After Follow-Up 4"
+  }
+
+  measure: follow_up_message_sent {
     type: number
     sql:
     (COUNT(${follow_up_1_date}) +
@@ -280,8 +291,6 @@ view: abm_data {
     #label: "Response Rate"
   #}
 
-
-
   measure: thank_you_message_rr {
     type: number
     sql: (SUM(CASE WHEN ${response_date} < IFNULL(${follow_up_1_date}, '2099-01-01') THEN 1 ELSE 0 END) /
@@ -331,7 +340,7 @@ view: abm_data {
     label: "Total Company"
   }
 
-
+##************************************* Dynamic Metrics ************************#
 
   parameter: measure_select_dynamic_metric {
 
