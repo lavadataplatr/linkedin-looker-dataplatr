@@ -158,6 +158,18 @@ view: abm_data {
     label: "Total Accepted"
   }
 
+  # measure: total_accepted_count {
+  #   type: count
+  #   sql: ${accepted_date_date} ;;
+  #   label: "Accepted"
+  # }
+
+  measure: accepted_total {
+    type: sum
+    sql: CASE WHEN ${accepted_date_date} IS NOT NULL THEN 1 ELSE 0 END;
+    label: "Accepted"
+  }
+
   measure: connections_sent_custom_date {
     type: number
     sql:
