@@ -344,8 +344,8 @@ view: abm_data {
 
   parameter: measure_select_dynamic_metric {
 
-    default_value: "Company"
-    allowed_value: {label: "TTop 10 Locations by Response" value: "Top 10 Locations by Response"}
+    default_value: "Top 10 Locations by Response"
+    allowed_value: {label: "Top 10 Locations by Response" value: "Top 10 Locations by Response"}
     allowed_value: {label: "Top 10 Designation by Response" value: "Top 10 Designation by Response"}
     allowed_value: {label: "Top 10 Company Size by Response" value: "Top 10 Company Size by Response"}
     allowed_value: {label: "Top 10 Industry by Response" value: "Top 10 Industry by Response"}
