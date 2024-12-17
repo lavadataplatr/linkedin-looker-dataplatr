@@ -240,14 +240,42 @@ view: abm_data {
     label: "Follow-Up Message Sent"
   }
 
+  measure: follow_up_1_message_sent {
+    type: number
+    sql: COUNT(${follow_up_1_date}) ;;
+    label: "Follow-Up 1 Message Sent"
+  }
+
+  measure: follow_up_2_message_sent {
+    type: number
+    sql: COUNT(${follow_up_2_date}) ;;
+    label: "Follow-Up 2 Message Sent"
+  }
+
+  measure: follow_up_3_message_sent {
+    type: number
+    sql: COUNT(${follow_up_3_date}) ;;
+    label: "Follow-Up 3 Message Sent"
+  }
+
+  measure: follow_up_4_message_sent {
+    type: number
+    sql: COUNT(${follow_up_4_date}) ;;
+    label: "Follow-Up 4 Message Sent"
+  }
+
+
+
+
+
 
 # Measure for Acceptance Rate
   measure: acceptance_rate {
     type: number
     sql:
-    (SUM(CASE WHEN ${accepted} = 'yes' THEN 1 ELSE 0 END) * 1.0) /
+    (SUM(CASE WHEN ${accepted_date_date} IS NOT NULL THEN 1 ELSE 0 END) * 1.0) /
     NULLIF(COUNT(${reached_out_date}), 0) ;;
-    value_format: "0.00%"  # Format as percentage
+    value_format_name: "percent_2"
     label: "Acceptance Rate"
   }
 
