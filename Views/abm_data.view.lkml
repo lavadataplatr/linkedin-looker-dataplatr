@@ -354,20 +354,23 @@ view: abm_data {
     hidden: no
   }
 
-  measure: dynamic_overview_metric {
-    type: number
-    sql: CASE
-          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Locations by Response' THEN ${connections_sent}
-          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Designation by Response' THEN ${connections_sent}
-          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company Size by Response' THEN ${connections_sent}
-          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Industry by Response' THEN ${connections_sent}
-        END ;;
-    label: "Dynamic Top 10 Metric"
-    view_label: "Calculated Metrics"
-    description: "Dynamic Top 10 Metric measure created for various Top 10 Company metrics."
-    value_format_name: decimal_0
-    hidden: no
-  }
+
+
+
+  # measure: dynamic_overview_metric {
+  #   type: number
+  #   sql: CASE
+  #         WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Locations by Response' THEN ${connections_sent}
+  #         WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Designation by Response' THEN ${connections_sent}
+  #         WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company Size by Response' THEN ${connections_sent}
+  #         WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Industry by Response' THEN ${connections_sent}
+  #       END ;;
+  #   label: "Dynamic Top 10 Metric"
+  #   view_label: "Calculated Metrics"
+  #   description: "Dynamic Top 10 Metric measure created for various Top 10 Company metrics."
+  #   value_format_name: decimal_0
+  #   hidden: no
+  # }
 
   dimension: dynamic_dimension {
     type: string
@@ -381,6 +384,30 @@ view: abm_data {
     view_label: "Dynamic Fields"
     description: "Dimension changes dynamically based on parameter selection."
     hidden: no
+  }
+
+  measure: dynamic_connections_sent {
+    type: number
+    sql: ${connections_sent} ;;
+    label: "Connections Sent"
+    view_label: "Calculated Metrics"
+    value_format_name: decimal_0
+  }
+
+  measure: dynamic_accepted {
+    type: number
+    sql: ${accepted} ;;
+    label: "Accepted"
+    view_label: "Calculated Metrics"
+    value_format_name: decimal_0
+  }
+
+  measure: dynamic_response_received {
+    type: number
+    sql: ${response_received} ;;
+    label: "Response Received"
+    view_label: "Calculated Metrics"
+    value_format_name: decimal_0
   }
 
 
