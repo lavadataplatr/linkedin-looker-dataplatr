@@ -123,7 +123,7 @@ view: abm_data {
 
   dimension: week_number {
     type: string
-    sql: CONCAT(EXTRACT(YEAR FROM DATE(${reached_out_date})), '-W', LPAD(CAST(EXTRACT(WEEK FROM DATE(${reached_out_date})) AS STRING), 2, '0')) ;;
+    sql: CONCAT(EXTRACT(YEAR FROM DATE(${reached_out_date})), '-', LPAD(CAST(EXTRACT(WEEK FROM DATE(${reached_out_date})) AS STRING), 2, '0')) ;;
   }
 
 
