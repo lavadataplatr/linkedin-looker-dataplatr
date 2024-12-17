@@ -129,6 +129,9 @@ view: abm_data {
 
 
 
+
+
+
 #**************************Measures**************************#
 
 
@@ -139,12 +142,30 @@ view: abm_data {
     label: "Connections Sent"
   }
 
- measure: accepted_total {
+  measure: Previous_connections {
+    type: percent_of_previous
+    sql: ${connections_sent} ;;
+  }
+
+# measure: accepted_total {
+#     type: sum
+#     sql: CASE WHEN ${accepted_date_date} IS NOT NULL THEN 1 ELSE 0 END;;
+#     label: "Accepted"
+#     hidden: no
+#   }
+
+  measure: accepted_total {
     type: sum
-    sql: CASE WHEN ${accepted_date_date} IS NOT NULL THEN 1 ELSE 0 END;;
+    sql:
+    CASE
+      WHEN ${accepted_date_date} IS NOT NULL OR ${accepted} = 'yes'
+      THEN 1
+      ELSE 0
+    END ;;
     label: "Accepted"
     hidden: no
   }
+
 
   measure: thank_you_message_sent {
     type: sum
@@ -270,14 +291,25 @@ view: abm_data {
 
 
 # Measure for Acceptance Rate
+  # measure: acceptance_rate {
+  #   type: number
+  #   sql:
+  #   (SUM(CASE WHEN ${accepted_date_date} IS NOT NULL THEN 1 ELSE 0 END) * 1.0) /
+  #   NULLIF(COUNT(${reached_out_date}), 0) ;;
+  #   value_format_name: "percent_2"
+  #   label: "Acceptance Rate"
+  # }
+
+# Measure for "Acceptance Rate"
   measure: acceptance_rate {
     type: number
     sql:
-    (SUM(CASE WHEN ${accepted_date_date} IS NOT NULL THEN 1 ELSE 0 END) * 1.0) /
-    NULLIF(COUNT(${reached_out_date}), 0) ;;
+      (SUM(CASE WHEN ${accepted_date_date} IS NOT NULL OR ${accepted} = 'yes' THEN 1 ELSE 0 END) * 1.0) /
+      NULLIF(COUNT(${reached_out_date}), 0) ;;
     value_format_name: "percent_2"
     label: "Acceptance Rate"
   }
+
 
   filter: custom_date_range {
     type: string

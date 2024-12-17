@@ -25,3 +25,5 @@ explore: cust_linkedin_pages__posts {}
 explore: time_bound_share_statistic {}
 
 explore: abm_data {}
+
+explore: abm_data_sqlquery {}
