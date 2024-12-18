@@ -435,7 +435,7 @@ view: abm_data {
   dimension: dynamic_dimension {
     type: string
     sql: CASE
-          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Locations by Response' THEN ${company_name}
+          WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Locations by Response' THEN ${location}
           WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Designation by Response' THEN ${designation}
           WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Company Size by Response' THEN ${company_size}
           WHEN {% parameter measure_select_dynamic_metric %} = 'Top 10 Industry by Response' THEN ${industry}
