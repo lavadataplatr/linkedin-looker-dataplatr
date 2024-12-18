@@ -26,4 +26,6 @@ explore: time_bound_share_statistic {}
 
 explore: abm_data {}
 
-explore: abm_data_sqlquery {}
+explore: time_bound_follower_statistic {}
+
+explore: time_bound_page_statistic {}

@@ -263,6 +263,138 @@ view: time_bound_page_statistic {
     type: number
     sql: ${TABLE}.products_unique_page_views ;;
   }
+
+
+#*******************************   Measures *******************************#
+
+  measure: daily_total_visitors {
+    type: sum
+    sql: ${all_page_views} ;;
+    label: "Daily Total Visitors"
+  }
+
+  measure: unique_visitors {
+    type: sum
+    sql: ${all_unique_page_views} ;;
+    label: "Unique Visitors"
+  }
+
+  measure: desktop_visitors {
+    type: sum
+    sql: ${all_desktop_page_views} ;;
+    label: "Visitors by Device (Desktop)"
+  }
+
+  measure: mobile_visitors {
+    type: sum
+    sql: ${all_mobile_page_views} ;;
+    label: "Visitors by Device (Mobile)"
+  }
+
+  measure: desktop_usage_percentage {
+    type: number
+    sql: (${desktop_visitors} / ${daily_total_visitors}) * 100 ;;
+    value_format_name: percent_2
+    label: "Percentage of Device Usage"
+  }
+
+  measure: total_about_page_views {
+    type: sum
+    sql: ${about_page_views} ;;
+  }
+
+  measure: total_about_unique_page_views {
+    type: sum
+    sql: ${about_unique_page_views} ;;
+  }
+
+  measure: total_desktop_page_views {
+    type: sum
+    sql: ${all_desktop_page_views} ;;
+  }
+
+  measure: total_desktop_unique_page_views {
+    type: sum
+    sql: ${all_desktop_unique_page_views} ;;
+  }
+
+  measure: total_mobile_page_views {
+    type: sum
+    sql: ${all_mobile_page_views} ;;
+  }
+
+  measure: total_mobile_unique_page_views {
+    type: sum
+    sql: ${all_mobile_unique_page_views} ;;
+  }
+
+  measure: total_page_views {
+    type: sum
+    sql: ${all_page_views} ;;
+  }
+
+  measure: total_unique_page_views {
+    type: sum
+    sql: ${all_unique_page_views} ;;
+  }
+
+  measure: careers_banner_promo_clicks {
+    type: sum
+    sql: ${careers_page_banner_promo_clicks} ;;
+  }
+
+  measure: careers_jobs_clicks {
+    type: sum
+    sql: ${careers_page_jobs_clicks} ;;
+  }
+
+  measure: careers_promo_links_clicks {
+    type: sum
+    sql: ${careers_page_promo_links_clicks} ;;
+  }
+
+  measure: total_careers_page_views {
+    type: sum
+    sql: ${careers_page_views} ;;
+  }
+
+  measure: total_careers_unique_page_views {
+    type: sum
+    sql: ${careers_unique_page_views} ;;
+  }
+
+  measure: unique_to_total_views_ratio {
+    type: number
+    sql: ${total_unique_page_views} / NULLIF(${total_page_views}, 0) ;;
+    value_format: "#,##0.00%"
+  }
+
+  measure: desktop_to_mobile_views_ratio {
+    type: number
+    sql: ${total_desktop_page_views} / NULLIF(${total_mobile_page_views}, 0) ;;
+    value_format: "#,##0.00%"
+  }
+
+  measure: about_to_total_views_percentage {
+    type: number
+    sql: ${total_about_page_views} / NULLIF(${total_page_views}, 0) ;;
+    value_format: "#,##0.00%"
+  }
+
+  measure: mobile_careers_jobs_clicks {
+    type: sum
+    sql: ${mobile_careers_page_jobs_clicks} ;;
+  }
+
+  measure: desktop_jobs_unique_percentage {
+    type: number
+    sql: ${desktop_jobs_unique_page_views} / NULLIF(${desktop_jobs_page_views}, 0) ;;
+    value_format: "#,##0.00%"
+  }
+
+
+
+
   measure: count {
     type: count
   }
