@@ -267,76 +267,173 @@ view: time_bound_page_statistic {
 
 #*******************************   Measures *******************************#
 
-  measure: daily_total_visitors {
+
+
+  measure: total_page_views {
     type: sum
     sql: ${all_page_views} ;;
-    label: "Daily Total Visitors"
+    label: "Page Views"
+    hidden: no
   }
 
-  measure: unique_visitors {
+  measure: total_unique_page_views{
     type: sum
     sql: ${all_unique_page_views} ;;
-    label: "Unique Visitors"
-  }
-
-  measure: desktop_visitors {
-    type: sum
-    sql: ${all_desktop_page_views} ;;
-    label: "Visitors by Device (Desktop)"
-  }
-
-  measure: mobile_visitors {
-    type: sum
-    sql: ${all_mobile_page_views} ;;
-    label: "Visitors by Device (Mobile)"
-  }
-
-  measure: desktop_usage_percentage {
-    type: number
-    sql: (${desktop_visitors} / ${daily_total_visitors}) * 100 ;;
-    value_format_name: percent_2
-    label: "Percentage of Device Usage"
-  }
-
-  measure: total_about_page_views {
-    type: sum
-    sql: ${about_page_views} ;;
-  }
-
-  measure: total_about_unique_page_views {
-    type: sum
-    sql: ${about_unique_page_views} ;;
+    label: "Unique Page Views"
+    hidden: no
   }
 
   measure: total_desktop_page_views {
     type: sum
     sql: ${all_desktop_page_views} ;;
-  }
-
-  measure: total_desktop_unique_page_views {
-    type: sum
-    sql: ${all_desktop_unique_page_views} ;;
+    label: "Desktop Page Views"
+    hidden: no
   }
 
   measure: total_mobile_page_views {
     type: sum
     sql: ${all_mobile_page_views} ;;
+    label: "Mobile Page Views"
+    hidden: no
   }
 
-  measure: total_mobile_unique_page_views {
+ measure: total_desktop_unique_page_views {
+    type: sum
+    sql: ${all_desktop_unique_page_views} ;;
+    label: "Total Desktop Unique Page Views"
+  }
+
+ measure: total_mobile_unique_page_views {
     type: sum
     sql: ${all_mobile_unique_page_views} ;;
+    label: "Total Mobile Unique Page Views"
   }
 
-  measure: total_page_views {
+
+
+  # measure: desktop_usage_percentage {
+  #   type: number
+  #   sql: (${desktop_visitors} / ${all_page_views}) * 100 ;;
+  #   value_format_name: percent_2
+  #   label: "Percentage of Device Usage"
+  #   hidden: no
+  # }
+
+##############  About Measures ######################
+
+  measure: total_about_page_views {
     type: sum
-    sql: ${all_page_views} ;;
+    sql: ${about_page_views} ;;
+    label: "Total About Page Views"
   }
 
-  measure: total_unique_page_views {
+  measure: total_about_unique_page_views {
     type: sum
-    sql: ${all_unique_page_views} ;;
+    sql: ${about_unique_page_views} ;;
+    label: "Total About Unique Page Views"
   }
+
+  measure: total_desktop_about_page_views {
+    type: sum
+    sql: ${desktop_about_page_views} ;;
+    label: "Total Desktop About Page Views"
+  }
+
+  measure: total_desktop_about_unique_page_views {
+    type: sum
+    sql: ${desktop_about_unique_page_views} ;;
+    label: "Total Desktop About Unique Page Views"
+  }
+
+  measure: total_mobile_about_page_views{
+    type: sum
+    sql: $(${mobile_about_page_views};;
+    label: "Total Mobile About Page Views"
+  }
+
+  measure: total_mobile_about_unique_page_views{
+    type: sum
+    sql: $(${mobile_about_unique_page_views};;
+    label: "Total Mobile About Unique Page Views"
+  }
+
+
+#********************* Insights Measures  **********************#
+
+  measure: total_desktop_insights_page_views {
+    type: sum
+    sql: ${desktop_insights_page_views} ;;
+    label: "Total Desktop Insights Page Views"
+  }
+
+  measure: total_desktop_insights_unique_page_views {
+    type: sum
+    sql: ${desktop_insights_unique_page_views} ;;
+    label: "Total Desktop Insights Unique Page Views"
+  }
+
+  measure: total_insights_page_views {
+    type: sum
+    sql: ${insights_page_views} ;;
+    label: "Total Insights Page Views"
+  }
+
+  measure: total_insights_unique_page_views {
+    type: sum
+    sql: ${insights_unique_page_views} ;;
+    label: "Total Insights Unique Page Views"
+  }
+
+  measure: total_mobile_insights_page_views {
+    type: sum
+    sql: ${mobile_insights_page_views} ;;
+    label: "Total Mobile Insights Page Views"
+  }
+
+  measure: total_mobile_insights_unique_page_views {
+    type: sum
+    sql: ${mobile_insights_unique_page_views} ;;
+    label: "Total Mobile Insights Unique Page Views"
+  }
+
+#**************************** People Measures  *******************#
+
+  measure: total_desktop_people_page_views {
+    type: sum
+    sql: ${desktop_people_page_views} ;;
+    label: "Total Desktop People Page Views"
+  }
+
+  measure: total_desktop_people_unique_page_views {
+    type: sum
+    sql: ${desktop_people_unique_page_views} ;;
+    label: "Total Desktop People Unique Page Views"
+  }
+
+  measure: total_mobile_people_page_views {
+    type: sum
+    sql: ${mobile_people_page_views} ;;
+    label: "Total Mobile People Page Views"
+  }
+
+  measure: total_mobile_people_unique_page_views {
+    type: sum
+    sql: ${mobile_people_unique_page_views} ;;
+    label: "Total Mobile People Unique Page Views"
+  }
+
+  measure: total_people_page_views {
+    type: sum
+    sql: ${people_page_views} ;;
+    label: "Total People Page Views"
+  }
+
+  measure: total_people_unique_page_views {
+    type: sum
+    sql: ${people_unique_page_views} ;;
+    label: "Total People Unique Page Views"
+  }
+
 
   measure: careers_banner_promo_clicks {
     type: sum
@@ -363,34 +460,72 @@ view: time_bound_page_statistic {
     sql: ${careers_unique_page_views} ;;
   }
 
-  measure: unique_to_total_views_ratio {
-    type: number
-    sql: ${total_unique_page_views} / NULLIF(${total_page_views}, 0) ;;
-    value_format: "#,##0.00%"
-  }
 
-  measure: desktop_to_mobile_views_ratio {
-    type: number
-    sql: ${total_desktop_page_views} / NULLIF(${total_mobile_page_views}, 0) ;;
-    value_format: "#,##0.00%"
-  }
-
-  measure: about_to_total_views_percentage {
-    type: number
-    sql: ${total_about_page_views} / NULLIF(${total_page_views}, 0) ;;
-    value_format: "#,##0.00%"
-  }
 
   measure: mobile_careers_jobs_clicks {
     type: sum
     sql: ${mobile_careers_page_jobs_clicks} ;;
   }
 
-  measure: desktop_jobs_unique_percentage {
-    type: number
-    sql: ${desktop_jobs_unique_page_views} / NULLIF(${desktop_jobs_page_views}, 0) ;;
-    value_format: "#,##0.00%"
+
+
+
+
+#**************** Dynamic measures ***************#
+
+# Parameter for dynamic metric selection
+
+ parameter: metric_type {
+  default_value: "Page Views"
+  allowed_value: {label: "Page Views" value: "Page Views"}
+  allowed_value: {label: "Unique Visitors" value: "Unique Visitors"}
+  label: "Select Metric Type"
+}
+
+parameter: page_type {
+    default_value: "All Pages"
+    allowed_value: {label: "All Pages" value: "All Pages"}
+    allowed_value: {label: "Home" value: "Home"}
+    allowed_value: {label: "About" value: "About"}
+    allowed_value: {label: "Insights" value: "Insights"}
+    allowed_value: {label: "People" value: "People"}
+    label: "Select Page Type"
   }
+
+  measure: dynamic_desktop_page_views {
+    type: number
+    sql: |
+          CASE
+            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'All Pages' THEN ${total_desktop_page_views}
+            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'About' THEN ${total_desktop_about_page_views}
+            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'Insights' THEN ${total_desktop_insights_page_views}
+            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'People' THEN ${total_desktop_people_page_views}
+            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'All Pages' THEN ${total_desktop_unique_page_views}
+            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'About' THEN ${total_desktop_about_unique_page_views}
+            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'Insights' THEN ${total_desktop_insights_unique_page_views}
+            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'People' THEN ${total_desktop_people_unique_page_views}
+            ELSE 0
+          END ;;
+  }
+
+  measure: dynamic_mobile_page_views {
+    type: number
+    sql: |
+          CASE
+            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'All Pages' THEN ${total_mobile_page_views}
+            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'About' THEN ${total_mobile_about_page_views}
+            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'Insights' THEN ${total_mobile_insights_page_views}
+            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'People' THEN ${total_mobile_people_page_views}
+            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'All Pages' THEN ${total_mobile_unique_page_views}
+            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'About' THEN ${total_mobile_about_unique_page_views}
+            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'Insights' THEN ${total_mobile_insights_unique_page_views}
+            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'People' THEN ${total_mobile_people_unique_page_views}
+            ELSE 0
+          END ;;
+  }
+
+
+
 
 
 
