@@ -474,15 +474,17 @@ view: time_bound_page_statistic {
 #**************** Dynamic measures ***************#
 
 # Parameter for dynamic metric selection
+# Parameter to select metric type
 
- parameter: metric_type {
-  default_value: "Page Views"
-  allowed_value: {label: "Page Views" value: "Page Views"}
-  allowed_value: {label: "Unique Visitors" value: "Unique Visitors"}
-  label: "Select Metric Type"
-}
+  parameter: metric_type {
+    default_value: "Page Views"
+    allowed_value: {label: "Page Views" value: "Page Views"}
+    allowed_value: {label: "Unique Visitors" value: "Unique Visitors"}
+    label: "Select Metric Type"
+  }
 
-parameter: page_type {
+# Parameter to select page type
+  parameter: page_type {
     default_value: "All Pages"
     allowed_value: {label: "All Pages" value: "All Pages"}
     allowed_value: {label: "Home" value: "Home"}
@@ -492,38 +494,43 @@ parameter: page_type {
     label: "Select Page Type"
   }
 
+# Measure for dynamic desktop page views
   measure: dynamic_desktop_page_views {
     type: number
-    sql: |
-          CASE
-            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'All Pages' THEN ${total_desktop_page_views}
-            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'About' THEN ${total_desktop_about_page_views}
-            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'Insights' THEN ${total_desktop_insights_page_views}
-            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'People' THEN ${total_desktop_people_page_views}
-            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'All Pages' THEN ${total_desktop_unique_page_views}
-            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'About' THEN ${total_desktop_about_unique_page_views}
-            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'Insights' THEN ${total_desktop_insights_unique_page_views}
-            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'People' THEN ${total_desktop_people_unique_page_views}
-            ELSE 0
-          END ;;
+    sql:
+    CASE
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'All Pages' THEN ${total_desktop_page_views}
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'About' THEN ${total_desktop_about_page_views}
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'Insights' THEN ${total_desktop_insights_page_views}
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'People' THEN ${total_desktop_people_page_views}
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'All Pages' THEN ${total_desktop_unique_page_views}
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'About' THEN ${total_desktop_about_unique_page_views}
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'Insights' THEN ${total_desktop_insights_unique_page_views}
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'People' THEN ${total_desktop_people_unique_page_views}
+      ELSE 0
+    END ;;
+    label: "Dynamic Desktop Page Views"
+    description: "Calculated metric for dynamic desktop page views based on selected metric type and page type."
   }
 
+# Measure for dynamic mobile page views
   measure: dynamic_mobile_page_views {
     type: number
-    sql: |
-          CASE
-            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'All Pages' THEN ${total_mobile_page_views}
-            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'About' THEN ${total_mobile_about_page_views}
-            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'Insights' THEN ${total_mobile_insights_page_views}
-            WHEN ${metric_type} = 'Page Views' AND ${page_type} = 'People' THEN ${total_mobile_people_page_views}
-            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'All Pages' THEN ${total_mobile_unique_page_views}
-            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'About' THEN ${total_mobile_about_unique_page_views}
-            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'Insights' THEN ${total_mobile_insights_unique_page_views}
-            WHEN ${metric_type} = 'Unique Visitors' AND ${page_type} = 'People' THEN ${total_mobile_people_unique_page_views}
-            ELSE 0
-          END ;;
+    sql:
+    CASE
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'All Pages' THEN ${total_mobile_page_views}
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'About' THEN ${total_mobile_about_page_views}
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'Insights' THEN ${total_mobile_insights_page_views}
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'People' THEN ${total_mobile_people_page_views}
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'All Pages' THEN ${total_mobile_unique_page_views}
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'About' THEN ${total_mobile_about_unique_page_views}
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'Insights' THEN ${total_mobile_insights_unique_page_views}
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'People' THEN ${total_mobile_people_unique_page_views}
+      ELSE 0
+    END ;;
+    label: "Dynamic Mobile Page Views"
+    description: "Calculated metric for dynamic mobile page views based on selected metric type and page type."
   }
-
 
 
 
