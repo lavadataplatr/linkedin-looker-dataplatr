@@ -304,11 +304,12 @@ view: abm_data {
   measure: acceptance_rate {
     type: number
     sql:
-      (SUM(CASE WHEN ${accepted_date_date} IS NOT NULL OR ${accepted} = 'yes' THEN 1 ELSE 0 END) * 1.0) /
+      (SUM(CASE WHEN ${accepted_date_date} IS NOT NULL THEN 1 ELSE 0 END) * 1.0) /
       NULLIF(COUNT(${reached_out_date}), 0) ;;
     value_format_name: "percent_2"
     label: "Acceptance Rate"
   }
+
 
 
   filter: custom_date_range {

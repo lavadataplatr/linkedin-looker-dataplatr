@@ -495,6 +495,7 @@ view: time_bound_page_statistic {
   }
 
 # Measure for dynamic desktop page views
+
   measure: dynamic_desktop_page_views {
     type: number
     sql:
@@ -532,6 +533,42 @@ view: time_bound_page_statistic {
     description: "Calculated metric for dynamic mobile page views based on selected metric type and page type."
   }
 
+  measure: previous_day_dynamic_desktop_page_views {
+    type: number
+    sql:
+    CASE
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'All Pages' THEN
+        SUM(${total_desktop_page_views}) FILTER WHERE ${day_date} = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'About' THEN
+        SUM(${total_desktop_about_page_views}) FILTER WHERE ${day_date} = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'Insights' THEN
+        SUM(${total_desktop_insights_page_views}) FILTER WHERE ${day_date} = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      WHEN {% parameter metric_type %} = 'Page Views' AND {% parameter page_type %} = 'People' THEN
+        SUM(${total_desktop_people_page_views}) FILTER WHERE ${day_date} = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'All Pages' THEN
+        SUM(${total_desktop_unique_page_views}) FILTER WHERE ${day_date} = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'About' THEN
+        SUM(${total_desktop_about_unique_page_views}) FILTER WHERE ${day_date} = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'Insights' THEN
+        SUM(${total_desktop_insights_unique_page_views}) FILTER WHERE ${day_date} = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      WHEN {% parameter metric_type %} = 'Unique Visitors' AND {% parameter page_type %} = 'People' THEN
+        SUM(${total_desktop_people_unique_page_views}) FILTER WHERE ${day_date} = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      ELSE 0
+    END ;;
+    label: "Previous Day Dynamic Desktop Page Views"
+    description: "Calculated metric for previous day's dynamic desktop page views based on selected metric type and page type."
+  }
+
+
+  measure: percentage_change_desktop{
+  type: percent_of_previous
+  sql: ${dynamic_desktop_page_views} ;;
+  }
+
+  measure: percentage_change_mobile{
+    type: percent_of_previous
+    sql: ${dynamic_mobile_page_views} ;;
+  }
 
 
 
