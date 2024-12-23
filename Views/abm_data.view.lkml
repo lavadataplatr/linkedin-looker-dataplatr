@@ -225,6 +225,13 @@ view: abm_data {
     type: sum
     sql: CASE WHEN ${response_date} < IFNULL(${follow_up_1_date}, '2099-01-01') THEN 1 ELSE 0 END;;
     label: "Response After Thank You Message"
+    link: {
+      label: "Details Report"
+      # url: "/dashboards/334?filter=Response+Type=Thank+You+Message"
+      url: "/dashboards/334?Response+After+Thank+You+Message={{filterable_value|url_encode}}"
+      # url: "/dashboards/316?Connector+Name={{filterable_value|url_encode}}"
+
+    }
   }
 
   measure: response_after_follow_up_1 {
@@ -445,6 +452,17 @@ view: abm_data {
     view_label: "Dynamic Fields"
     description: "Dimension changes dynamically based on parameter selection."
     hidden: no
+    # link: {
+    #   label: "Details Report"
+    #   # url: "/dashboards/334?filter=Response+Type=Thank+You+Message"
+    #   url: "/dashboards/334?Dynamic+Dimension={{filterable_value|url_encode}}"
+    #   # url: "/dashboards/316?Connector+Name={{filterable_value|url_encode}}"
+
+    # }
+    link: {
+      label: "Details Report"
+      url: "/dashboards/334?Dynamic+Dimension={{filterable_value|url_encode}}"
+    }
   }
 
   measure: dynamic_connections_sent {
