@@ -452,41 +452,33 @@ view: abm_data {
     view_label: "Dynamic Fields"
     description: "Dimension changes dynamically based on parameter selection."
     hidden: no
-    # link: {
-    #   label: "Details Report"
-    #   # url: "/dashboards/334?filter=Response+Type=Thank+You+Message"
-    #   url: "/dashboards/334?Dynamic+Dimension={{filterable_value|url_encode}}"
-    #   # url: "/dashboards/316?Connector+Name={{filterable_value|url_encode}}"
 
-    # }
     link: {
       label: "Details Report"
       url: "/dashboards/334?Dynamic+Dimension={{filterable_value|url_encode}}"
     }
   }
 
-  measure: dynamic_connections_sent {
-    type: number
-    sql: ${connections_sent} ;;
-    label: "Connections Sent"
-    view_label: "Calculated Metrics"
-    value_format_name: decimal_0
+#************************** Time period Dynamic Dimension ****************************#
+
+  parameter: time_period {
+    type: string
+    allowed_value: { label: "MTD" value: "MTD" }
+    allowed_value: { label: "Week" value: "Week" }
+    default_value: "MTD"
+    label: "Select Time Period"
   }
 
-  measure: dynamic_accepted {
-    type: number
-    sql: ${accepted} ;;
-    label: "Accepted"
-    view_label: "Calculated Metrics"
-    value_format_name: decimal_0
-  }
-
-  measure: dynamic_response_received {
-    type: number
-    sql: ${response_received} ;;
-    label: "Response Received"
-    view_label: "Calculated Metrics"
-    value_format_name: decimal_0
+  dimension: dynamic_time_dimension {
+    type: string
+    sql: CASE
+        WHEN {% parameter time_period %} = 'MTD' THEN DATE_TRUNC('month', ${reached_out_date})
+        WHEN {% parameter time_period %} = 'Week' THEN DATE_TRUNC('week', ${reached_out_date})
+      END ;;
+    label: "Dynamic Time Dimension"
+    view_label: "Dynamic Fields"
+    description: "Changes dynamically based on selected time period (MTD or Week)."
+    hidden: no
   }
 
 
