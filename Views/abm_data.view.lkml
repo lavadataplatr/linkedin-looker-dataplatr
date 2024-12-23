@@ -121,11 +121,15 @@ view: abm_data {
     label: "Thank You Message Date"
   }
 
-  dimension: week_number {
+  dimension: week_number_reached_out {
     type: string
     sql: CONCAT(EXTRACT(YEAR FROM DATE(${reached_out_date})), '-', LPAD(CAST(EXTRACT(WEEK FROM DATE(${reached_out_date})) AS STRING), 2, '0')) ;;
   }
 
+  dimension: week_number_thank_you {
+    type: string
+    sql: CONCAT(EXTRACT(YEAR FROM DATE(${thank_you_message_date})), '-', LPAD(CAST(EXTRACT(WEEK FROM DATE(${thank_you_message_date})) AS STRING), 2, '0')) ;;
+  }
 
 
 
@@ -225,13 +229,13 @@ view: abm_data {
     type: sum
     sql: CASE WHEN ${response_date} < IFNULL(${follow_up_1_date}, '2099-01-01') THEN 1 ELSE 0 END;;
     label: "Response After Thank You Message"
-    link: {
-      label: "Details Report"
-      # url: "/dashboards/334?filter=Response+Type=Thank+You+Message"
-      url: "/dashboards/334?Response+After+Thank+You+Message={{filterable_value|url_encode}}"
-      # url: "/dashboards/316?Connector+Name={{filterable_value|url_encode}}"
+    # link: {
+    #   label: "Details Report"
+    #   # url: "/dashboards/334?filter=Response+Type=Thank+You+Message"
+    #   url: "/dashboards/334?Response+After+Thank+You+Message={{filterable_value|url_encode}}"
+    #   # url: "/dashboards/316?Connector+Name={{filterable_value|url_encode}}"
 
-    }
+    # }
   }
 
   measure: response_after_follow_up_1 {
@@ -469,17 +473,48 @@ view: abm_data {
     label: "Select Time Period"
   }
 
+# dimension: dynamic_time_dimension {
+
+#   type: string
+#   sql: CASE
+#       WHEN {% parameter time_period %} = 'MTD' THEN ${reached_out_month}
+#       WHEN {% parameter time_period %} = 'Week' THEN ${week_number}
+#     END ;;
+#   label: "Dynamic Time Dimension"
+#   view_label: "Dynamic Fields"
+#   description: "Changes dynamically based on the selected time period (MTD or Week)."
+#   hidden: no
+# }
+
   dimension: dynamic_time_dimension {
     type: string
     sql: CASE
-        WHEN {% parameter time_period %} = 'MTD' THEN DATE_TRUNC('month', ${reached_out_date})
-        WHEN {% parameter time_period %} = 'Week' THEN DATE_TRUNC('week', ${reached_out_date})
-      END ;;
+      WHEN {% parameter time_period %} = 'MTD' THEN CAST(${reached_out_month} AS STRING)
+      WHEN {% parameter time_period %} = 'Week' THEN CAST(${week_number_reached_out} AS STRING)
+    END ;;
     label: "Dynamic Time Dimension"
     view_label: "Dynamic Fields"
-    description: "Changes dynamically based on selected time period (MTD or Week)."
+    description: "Changes dynamically based on the selected time period (MTD or Week)."
     hidden: no
   }
+
+  dimension: dynamic_thankdyou_time_dimension {
+    type: string
+    sql: CASE
+      WHEN {% parameter time_period %} = 'MTD' THEN CAST(${thank_you_message_month} AS STRING)
+      WHEN {% parameter time_period %} = 'Week' THEN CAST(${week_number_thank_you} AS STRING)
+    END ;;
+    label: "Dynamic Time Dimension Thank you"
+    view_label: "Dynamic Fields"
+    description: "Changes dynamically based on the selected time period (MTD or Week)."
+    hidden: no
+  }
+
+
+
+
+
+
 
 
 
