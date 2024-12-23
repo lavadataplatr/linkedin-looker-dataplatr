@@ -459,7 +459,7 @@ view: abm_data {
 
     link: {
       label: "Details Report"
-      url: "/dashboards/334?Dynamic+Dimension={{filterable_value|url_encode}}"
+      url: "/dashboards/334?Dynamic+Dimension={{value|url_encode}}&Metrics={{ _filters['abm_data.measure_select_dynamic_metric'] | url_encode }}"
     }
   }
 
